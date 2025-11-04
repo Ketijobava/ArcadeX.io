@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🧩 Retro Puzzle</title>
+  <style>
+    body {
+      background: black;
+      color: lime;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    #puzzle {
+      display: grid;
+      grid-template-columns: repeat(3, 80px);
+      grid-gap: 5px;
+      justify-content: center;
+      margin: 0 auto;
+    }
+    .tile {
+      width: 80px;
+      height: 80px;
+      background: #333;
+      color: lime;
+      font-size: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid lime;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+    .tile:hover {
+      background: #555;
+    }
+    #status {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧩 Retro Puzzle</h1>
+  <div id="puzzle"></div>
+  <div id="status">Arrange tiles in order (1–9)</div>
+
+  <script>
+    const puzzle = document.getElementById('puzzle');
+    const statusText = document.getElementById('status');
+
+    let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    shuffle(numbers);
+
+    let selectedTile = null;
+
+    function createTiles() {
+      puzzle.innerHTML = '';
+      numbers.forEach((num, index) => {
+        const tile = document.createElement('div');
+        tile.className = 'tile';
+        tile.textContent = num;
+        tile.dataset.index = index;
+
+        tile.addEventListener('click', () => {
+          if (selectedTile === null) {
+            selectedTile = index;
+            tile.style.background = 'lime';
+            tile.style.color = 'black';
+          } else {
+            swap(selectedTile, index);
+            selectedTile = null;
+            checkWin();
+            createTiles();
+          }
+        });
+
+        puzzle.appendChild(tile);
+      });
+    }
+
+    function swap(i, j) {
+      const temp = numbers[i];
+      numbers[i] = numbers[j];
+      numbers[j] = temp;
+    }
+
+    function checkWin() {
+      for (let i = 0; i < 9; i++) {
+        if (numbers[i] !== i + 1) return;
+      }
+      statusText.textContent = '✅ Puzzle Solved! You Win!';
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    createTiles();
+  </script>
+</body>
+</html>

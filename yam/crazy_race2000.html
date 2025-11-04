@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crazy Racer 2000</title>
+    <style>
+        body {
+            background: black;
+            color: lime;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            overflow: hidden; /* Prevent scrollbars from game area */
+        }
+        h1 {
+            margin-top: 10px;
+        }
+        #gameArea {
+            margin: 0 auto;
+            position: relative;
+            width: 300px;
+            height: 500px;
+            border: 4px solid lime;
+            background: #111;
+            overflow: hidden;
+            box-sizing: content-box; /* Ensure border is outside of width/height */
+        }
+        #player {
+            width: 40px;
+            height: 60px;
+            background: red;
+            position: absolute;
+            bottom: 10px;
+            left: 130px;
+        }
+        .enemy {
+            width: 40px;
+            height: 60px;
+            background: yellow;
+            position: absolute;
+            top: -100px;
+        }
+        #score {
+            margin-top: 10px;
+            font-size: 20px;
+        }
+        .back-to-home-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: lime;
+            color: black;
+            text-decoration: none;
+            font-family: 'Press Start 2P', cursive; /* Use a retro font if linked */
+            font-size: 16px;
+            border: 2px solid lime;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .back-to-home-btn:hover {
+            background-color: black;
+            color: lime;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>🚗 Crazy Racer 2000 🕹️</h1>
+    <div id="gameArea">
+        <div id="player"></div>
+        <div class="enemy" id="enemy1"></div>
+        <div class="enemy" id="enemy2"></div>
+    </div>
+    <p id="score">Score: 0</p>
+    <a href="index.html#games" class="back-to-home-btn">Back to ArcadeX</a>
+
+    <script>
+        const player = document.getElementById('player');
+        const enemies = [document.getElementById('enemy1'), document.getElementById('enemy2')];
+        const scoreDisplay = document.getElementById('score');
+        let score = 0;
+        let gameOver = false;
+
+        let playerX = 130;
+        const playerSpeed = 10; // Pixels per key press
+
+        document.addEventListener('keydown', (e) => {
+            if (gameOver) return; // Stop movement if game is over
+
+            if (e.key === 'ArrowLeft' && playerX > 0) {
+                playerX = Math.max(0, playerX - playerSpeed); // Ensure player doesn't go off left edge
+            }
+            if (e.key === 'ArrowRight' && playerX < 260) { // 300 (gameArea width) - 40 (player width) = 260
+                playerX = Math.min(260, playerX + playerSpeed); // Ensure player doesn't go off right edge
+            }
+            player.style.left = playerX + 'px';
+        });
+
+        // Initial positions for enemies
+        let enemyPositions = enemies.map(() => ({
+            y: -100 - Math.random() * 400, // Stagger initial positions
+            x: Math.floor(Math.random() * 260) // Random initial X
+        }));
+
+        const enemySpeed = 4; // Pixels per frame
+
+        function gameLoop() {
+            if (gameOver) return;
+
+            enemies.forEach((enemy, index) => {
+                let { y, x } = enemyPositions[index];
+                y += enemySpeed; // Move enemy down
+
+                // If enemy goes off screen, reset its position and increment score
+                if (y > 500) {
+                    score++;
+                    scoreDisplay.textContent = 'Score: ' + score;
+                    y = -100; // Reset above screen
+                    x = Math.floor(Math.random() * 260); // New random X position
+                }
+
+                enemy.style.top = y + 'px';
+                enemy.style.left = x + 'px';
+
+                enemyPositions[index] = { y, x }; // Update stored position
+
+                // Collision Detection
+                const playerRect = player.getBoundingClientRect();
+                const enemyRect = enemy.getBoundingClientRect();
+
+                if (
+                    playerRect.left < enemyRect.right &&
+                    playerRect.right > enemyRect.left &&
+                    playerRect.top < enemyRect.bottom &&
+                    playerRect.bottom > enemyRect.top
+                ) {
+                    // Collision! Game Over
+                    gameOver = true;
+                    alert(`Game Over! Your score: ${score}`);
+                    // Optionally, you could display a "Restart" button
+                }
+            });
+
+            requestAnimationFrame(gameLoop); // Continue the loop
+        }
+
+        // Start the game loop
+        gameLoop();
+    </script>
+</body>
+</html>

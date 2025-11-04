@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Space Invaders</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: white;
+      font-family: monospace;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+      background: #111;
+      border: 2px solid white;
+    }
+  </style>
+</head>
+<body>
+<canvas id="gameCanvas" width="400" height="500"></canvas>
+
+<script>
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+
+  const player = {
+    x: 180,
+    y: 460,
+    width: 40,
+    height: 10,
+    color: 'lime',
+    speed: 5
+  };
+
+  const bullet = {
+    x: 0,
+    y: 0,
+    width: 4,
+    height: 10,
+    color: 'red',
+    speed: 7,
+    active: false
+  };
+
+  const aliens = [];
+  const alienRows = 4;
+  const alienCols = 8;
+  const alienWidth = 30;
+  const alienHeight = 20;
+  const alienSpacing = 10;
+  let alienDirection = 1;
+  let gameOver = false;
+
+  function createAliens() {
+    for (let row = 0; row < alienRows; row++) {
+      for (let col = 0; col < alienCols; col++) {
+        aliens.push({
+          x: col * (alienWidth + alienSpacing) + 20,
+          y: row * (alienHeight + alienSpacing) + 20,
+          width: alienWidth,
+          height: alienHeight,
+          color: 'white',
+          alive: true
+        });
+      }
+    }
+  }
+
+  function drawRect(obj) {
+    ctx.fillStyle = obj.color;
+    ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawRect(player);
+
+    if (bullet.active) drawRect(bullet);
+
+    aliens.forEach(alien => {
+      if (alien.alive) drawRect(alien);
+    });
+
+    if (gameOver) {
+      ctx.fillStyle = 'red';
+      ctx.font = '24px monospace';
+      ctx.fillText("GAME OVER", 130, 250);
+    }
+  }
+
+  function update() {
+    if (bullet.active) {
+      bullet.y -= bullet.speed;
+      if (bullet.y < 0) bullet.active = false;
+    }
+
+    aliens.forEach(alien => {
+      if (!alien.alive) return;
+
+      alien.x += alienDirection;
+      if (alien.x <= 0 || alien.x + alien.width >= canvas.width) {
+        alienDirection *= -1;
+        aliens.forEach(a => a.y += 10);
+        return;
+      }
+
+      if (bullet.active &&
+          bullet.x < alien.x + alien.width &&
+          bullet.x + bullet.width > alien.x &&
+          bullet.y < alien.y + alien.height &&
+          bullet.y + bullet.height > alien.y) {
+        alien.alive = false;
+        bullet.active = false;
+      }
+
+      if (alien.y + alien.height >= player.y) {
+        gameOver = true;
+      }
+    });
+  }
+
+  function gameLoop() {
+    if (!gameOver) {
+      update();
+      draw();
+      requestAnimationFrame(gameLoop);
+    } else {
+      draw();
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') player.x -= player.speed;
+    if (e.key === 'ArrowRight') player.x += player.speed;
+    if (e.key === ' ' && !bullet.active) {
+      bullet.x = player.x + player.width / 2 - bullet.width / 2;
+      bullet.y = player.y;
+      bullet.active = true;
+    }
+  });
+
+  createAliens();
+  gameLoop();
+</script>
+</body>
+</html>

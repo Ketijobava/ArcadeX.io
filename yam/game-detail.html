@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="game-detail-title">Game Details - ArcadeX</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        /* Specific styles for the game detail page */
+        .game-detail-section {
+            padding: 80px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            background-color: var(--secondary-bg-color);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .game-detail-section h2 {
+            font-size: 2.5em;
+            color: var(--accent-color-neon);
+            text-shadow: 3px 3px 7px rgba(0, 255, 0, 0.5);
+            margin-bottom: 25px;
+        }
+
+        .game-detail-section img {
+            max-width: 80%;
+            height: auto;
+            border: 5px solid var(--accent-color-red);
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
+            margin-bottom: 30px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .game-detail-section p {
+            font-size: 1.1em;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            text-align: left;
+            line-height: 1.8;
+        }
+
+        .back-btn {
+            margin-top: 30px;
+            display: inline-block;
+            padding: 12px 25px;
+            font-family: var(--font-arcade);
+            font-size: 0.9em;
+            text-transform: uppercase;
+            border: 3px solid var(--accent-color-neon);
+            background-color: transparent;
+            color: var(--accent-color-neon);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 3px rgba(0, 255, 0, 0.5);
+        }
+
+        .back-btn:hover {
+            background-color: var(--accent-color-neon);
+            color: var(--primary-bg-color);
+            box-shadow: 0 0 15px var(--accent-color-neon);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .game-detail-section {
+                padding: 40px 15px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+            .game-detail-section h2 {
+                font-size: 1.8em;
+            }
+            .game-detail-section img {
+                max-width: 95%;
+            }
+            .game-detail-section p {
+                font-size: 0.95em;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <h1 class="site-title">ARCADE X</h1>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="index.html#hero">HOME</a></li>
+                    <li><a href="index.html#games">GAMES</a></li>
+                    <li><a href="index.html#about">ABOUT ME</a></li>
+                    <li><a href="index.html#contact">CONTACT</a></li>
+                </ul>
+            </nav>
+            <div class="burger-menu" role="button" aria-label="Open navigation menu">
+                <div class="bar1"></div>
+                <div class="bar2"></div>
+                <div class="bar3"></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="game-detail" class="game-detail-section">
+            <h2 id="game-title"></h2>
+            <img id="game-image" src="" alt="Game Thumbnail">
+            <p id="game-description"></p>
+            <a href="index.html#games" class="btn back-btn">Back to Games</a>
+            <a id="play-game-btn" class="btn primary-btn" style="display: none; margin-left: 10px;">Play Game</a>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 ARCADE X - All Rights Reserved</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // This script is specific to game-detail.html
+        document.addEventListener('DOMContentLoaded', async () => {
+            // --- START: Hardcoded Game Data (Duplicate for game-detail.html) ---
+            const gamesData = [
+                {
+                    id: 'crazy-racer-2000',
+                    title: 'Crazy Racer 2000',
+                    thumbnail: 'crazyrace.png', 
+                    fullImage: 'crazyrace.png', 
+                    description: 'A thrilling retro racing game where you navigate through traffic and collect points. Dodge incoming vehicles and aim for the high score!',
+                    longDescription: 'Crazy Racer 2000 is an exhilarating arcade-style racing game. Take control of your pixelated car and weave through a relentless stream of enemy vehicles. The objective is simple: survive as long as possible, avoid collisions, and rack up points for every obstacle successfully dodged. With responsive controls and increasing difficulty, it offers a challenging and addictive experience for all retro gaming enthusiasts. Get ready to hit the road and prove your driving skills in this high-octane adventure!',
+                    gameUrl: 'crazy_race2000.html'
+                },
+                {
+                    id: 'space-invaders-x',
+                    title: 'Space Invaders X',
+                    thumbnail: 'space_invaders.png',
+                    fullImage: 'space_invaders.png',
+                    description: 'Defend Earth from endless waves of alien invaders in this classic arcade shooter remake.',
+                    longDescription: 'Space Invaders X is a modern take on the timeless classic. Command your laser cannon and strategically eliminate descending rows of alien attackers. Each wave presents a new challenge with faster enemies and more complex patterns. Collect power-ups to enhance your firepower and shields, and prepare for epic boss battles. The fate of the galaxy rests in your hands!',
+                    gameUrl: 'space_invaders.html' 
+                }
+                ,
+                {
+                    id:'puzzle',
+                    title:'Puzzle',
+                    thumbnail:'puzle.png',
+                    fullImage:'puzle.png',
+                    description:'Test your logic and memory in this neon-styled tile puzzle challenge!',
+                    longDescription:'Retro Puzzle is a nostalgic logic game that challenges you to arrange tiles in perfect order. Swap and slide them strategically to restore balance in this digital maze. With its minimalistic neon design and simple yet addictive gameplay, Retro Puzzle brings old-school fun to your screen. Perfect for players who love a brain-teasing arcade twist.',
+                    gameUrl:'puzle.html'
+                }
+                ,
+                {
+                    id:'midnight-guard',
+                    title:'Midnight Guard',
+                    thumbnail:'midnightguard.png',
+                    fullImage:'midnightguard.png',
+                    description:'Step into the darkness as the last guard of an eerie facility. Can you survive the night?',
+                    longDescription:'Midnight Guard is a tense pixel horror escape game. Navigate a dimly lit building, uncover secrets, and save the lost children before sunrise. Avoid shadowy figures and manage your limited visibility as you progress through increasingly dangerous levels. Inspired by retro survival games, it blends suspense, exploration, and pixel horror into one unforgettable experience.',
+                    gameUrl:'midnightguard.png'
+                }
+            
+            ];
+            
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const gameId = urlParams.get('id');
+
+            if (gameId) {
+                const game = gamesData.find(g => g.id === gameId);
+
+                if (game) {
+                    document.getElementById('game-detail-title').textContent = `${game.title} - ArcadeX`;
+                    document.getElementById('game-title').textContent = game.title;
+                    document.getElementById('game-image').src = game.fullImage || game.thumbnail;
+                    document.getElementById('game-image').alt = `${game.title} Image`;
+                    document.getElementById('game-description').textContent = game.longDescription || game.description;
+
+                    if (game.gameUrl) {
+                        const playGameBtn = document.getElementById('play-game-btn');
+                        playGameBtn.href = game.gameUrl;
+                        playGameBtn.style.display = 'inline-block';
+                    }
+                } else {
+                    document.getElementById('game-detail').innerHTML = '<p class="error-message" style="color: var(--accent-color-red); font-size: 1.2em; text-align: center;">Game not found!</p>';
+                }
+            } else {
+                document.getElementById('game-detail').innerHTML = '<p class="error-message" style="color: var(--accent-color-red); font-size: 1.2em; text-align: center;">No game ID provided. Please select a game from the <a href="index.html#games" style="color: var(--accent-color-neon);">Games</a> section.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
